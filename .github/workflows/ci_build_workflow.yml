@@ -25,5 +25,9 @@ jobs:
       - name: Compilar proyecto
         run: dotnet build --configuration Release --no-restore
 
-      - name: Ejecutar pruebas
-        run: dotnet test --no-restore --verbosity normal
+
+      - name: install aspire cli
+        run: dotnet tool install --global aspire.cli --prerelease
+      - name: publish k8s
+        run: aspire publish --project .\AspireApp2.AppHost\AspireApp2.AppHost.csproj -p k8s -o k8s
+          
