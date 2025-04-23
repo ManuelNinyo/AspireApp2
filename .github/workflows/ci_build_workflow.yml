@@ -29,5 +29,5 @@ jobs:
       - name: install aspire cli
         run: dotnet tool install --global aspire.cli --prerelease
       - name: publish k8s
-        run: aspire publish --project .\AspireApp2.AppHost\AspireApp2.AppHost.csproj -p k8s -o k8s
+        run: aspire publish --project ./AspireApp2.AppHost/AspireApp2.AppHost.csproj -p k8s -o k8s
           
