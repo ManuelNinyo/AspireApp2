@@ -1,11 +1,17 @@
+using Projects;
+
 var builder = DistributedApplication.CreateBuilder(args);
 
 var cache = builder.AddRedis("cache");
 
-var apiService = builder.AddProject<Projects.AspireApp2_ApiService>("apiservice")
-    .WithHttpsHealthCheck("/health");
+var db = builder.AddPostgres("db");
 
-builder.AddProject<Projects.AspireApp2_Web>("webfrontend")
+var apiService = builder.AddProject<AspireApp2_ApiService>("apiservice")
+    .WithHttpsHealthCheck("/health")
+    .WithReference(db)
+    .WaitFor(db);
+
+builder.AddProject<AspireApp2_Web>("webfrontend")
     .WithExternalHttpEndpoints()
     .WithHttpsHealthCheck("/health")
     .WithReference(cache)
@@ -13,4 +19,7 @@ builder.AddProject<Projects.AspireApp2_Web>("webfrontend")
     .WithReference(apiService)
     .WaitFor(apiService);
 
+
+builder.AddKubernetesPublisher();
+builder.AddDockerComposePublisher();
 builder.Build().Run();
